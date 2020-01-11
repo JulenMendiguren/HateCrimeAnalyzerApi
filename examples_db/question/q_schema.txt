@@ -16,8 +16,7 @@
         "slider?": true,                        // Sólo number, true or false (absencia == false), necesita maxValue y minValue
         "datetimeFormat?": "datetime/date/time" // Sólo datetime, muestra fecha y hora, sólo fecha, o sólo hora.
     },
-    "createdAt": "isodate",                     // Fecha de creación
-    "deprecated": false                         // Si la pregunta ha sido depreciada, default false
+    "createdAt": "isodate"                     // Fecha de creación 
 }
 
 

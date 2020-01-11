@@ -2,17 +2,17 @@ console.log('Hola mundo');
 const mongoose = require('mongoose');
 const express = require('express');
 const morgan = require('morgan');
-morgan('tiny');
 const app = express();
-const mobile = require('./routes/mobile');
+const question = require('./routes/question');
 
 app.use(express.json());
-app.use('/api/mobile/', mobile);
+app.use(morgan('tiny'));
+app.use('/api/question/', question);
 
 app.listen(5005, () => console.log('Escuchando Puerto: ' + 5005));
 
 mongoose
-    .connect('mongodb://localhost/hatecrimeDB', {
+    .connect('mongodb://localhost/hateCrimeDB', {
         useNewUrlParser: true,
         useFindAndModify: false,
         useUnifiedTopology: true

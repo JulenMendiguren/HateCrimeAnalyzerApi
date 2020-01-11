@@ -50,13 +50,9 @@ const questionSchema = new mongoose.Schema({
             default: 'datetime'
         } // Sólo datetime, muestra fecha y hora, sólo fecha, o sólo hora.
     },
-    createdAt: { type: Date, default: Date.now }, // Fecha de creación
-    deprecated: {
-        type: Boolean,
-        default: false
-    } // Si la pregunta ha sido depreciada, default false
+    createdAt: { type: Date, default: Date.now } // Fecha de creación
 });
 
-const Question = mongoose.model('question', questionSchema);
+const Question = mongoose.model('questions', questionSchema);
 
 module.exports = Question;

@@ -6,12 +6,12 @@
         "createdAt": "isodate" // Fecha de creación
     },
     "answers": [
-        { "_id": "0000101", "answer": "Julen" },
-        { "_id": "0000102", "answer": "No me se ningún chiste" },
-        { "_id": "0000103", "answer": 27 },
-        { "_id": "0000104", "answer": 27 },
-        { "_id": "0000105", "answer": "a" },
-        { "_id": "0000105", "answer": "1996-08-22T12:50:04.490+02:00" }
+        { "_id": "0000101", "answer": "Julen" , "questionType": "textbox"},
+        { "_id": "0000102", "answer": "No me se ningún chiste", "questionType": "textbox" },
+        { "_id": "0000103", "answer": 27, "questionType": "number"},
+        { "_id": "0000104", "answer": 27, "questionType": "number"},
+        { "_id": "0000105", "answer": "a", "questionType": "likert" },
+        { "_id": "0000105", "answer": "1996-08-22T12:50:04.490+02:00", "questionType": "datetime"}
     ],
     "createdAt": "1996-08-22T12:50:04.490+02:00",   
 
