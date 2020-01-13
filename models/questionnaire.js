@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { questionSchema } = require('./question');
+const Question = require('./question');
 
 const questionnaireSchema = new mongoose.Schema({
     category: {
@@ -8,9 +8,7 @@ const questionnaireSchema = new mongoose.Schema({
         required: true
     }, // Tipo de questionario
     createdAt: { type: Date, default: Date.now }, // Fecha de creación
-    questions: {
-        type: [questionSchema]
-    }
+    questions: [Question.schema]
 });
 
 const Questionnaire = mongoose.model('questionnaires', questionnaireSchema);

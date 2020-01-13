@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
-const { questionnaireSchema } = require('./questionnaire');
+const questionnaire = require('./questionnaire');
 
 const answerSchema = new mongoose.Schema({
-    questionnaire: questionnaireSchema, // Las preguntas
+    questionnaire: questionnaire.schema, // Las preguntas
     createdAt: { type: Date, default: Date.now }, // Fecha de creación
     answers: {
-        _id: ObjectId,
+        _id: mongoose.Schema.Types.ObjectId,
+
         answer: {
-            type: asd => console.log(asd) //Check esto
+            type: mongoose.Schema.Types.Mixed
         },
         questionType: {
             type: String,
@@ -26,6 +27,6 @@ const answerSchema = new mongoose.Schema({
     }
 });
 
-const Answer = mongoose.model('answers', questionnaireSchema);
+const Answer = mongoose.model('answers', answerSchema);
 
 module.exports = Answer;
