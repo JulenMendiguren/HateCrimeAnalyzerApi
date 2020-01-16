@@ -32,12 +32,11 @@ const questionSchema = new mongoose.Schema({
             type: Boolean,
             required: true
         },
-        subquestionOf: String,
+        subquestionOf: mongoose.Schema.Types.ObjectId,
         requiredAnswer: String,
         size: {
             type: String, // Sólo textbox
-            enum: ['big', 'small'],
-            default: 'small'
+            enum: ['big', 'small']
         },
         minLength: Number, // Sólo textbox, número de caracteres
         maxLength: Number, // Sólo textbox, número de caracteres
@@ -46,8 +45,7 @@ const questionSchema = new mongoose.Schema({
         slider: Boolean, // Sólo number, true or false (absencia == false), necesita maxValue y minValue
         datetimeFormat: {
             type: String, // Sólo textbox
-            enum: ['datetime', 'date', 'time'],
-            default: 'datetime'
+            enum: ['datetime', 'date', 'time']
         } // Sólo datetime, muestra fecha y hora, sólo fecha, o sólo hora.
     },
     createdAt: { type: Date, default: Date.now } // Fecha de creación
