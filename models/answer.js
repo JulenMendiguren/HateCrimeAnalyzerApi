@@ -26,6 +26,30 @@ const answerSchema = new mongoose.Schema({
                 required: true
             }
         }
+    ],
+    userQuestionnaire: questionnaire.schema, // Las preguntas del usuario
+    userAnswers: [
+        {
+            _id: mongoose.Schema.Types.ObjectId,
+
+            answer: {
+                type: mongoose.Schema.Types.Mixed
+            },
+            questionType: {
+                type: String,
+                enum: [
+                    'textbox',
+                    'number',
+                    'likert',
+                    'datetime',
+                    'yesno',
+                    'radio',
+                    'multiselect',
+                    'geolocation'
+                ],
+                required: true
+            }
+        }
     ]
 });
 

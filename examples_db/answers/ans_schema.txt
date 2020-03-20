@@ -14,7 +14,8 @@
         { "_id": "0000105", "answer": "1996-08-22T12:50:04.490+02:00", "questionType": "datetime"}
     ],
     "createdAt": "1996-08-22T12:50:04.490+02:00",   
-
+    userQuestionnaire: // Mismo formato que questionnaire
+    userAnswers:    // Mismo formato que answers
 }
 
 Lang?
