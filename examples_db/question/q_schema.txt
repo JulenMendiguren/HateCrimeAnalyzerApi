@@ -1,9 +1,16 @@
 {
     "_id": "questionID",                        // Id de la pregunta, autogenerado por mongodb
-    "text": "Enunciado de la pregunta",
+    "text_eu": "Enunciado de la pregunta euskara",
+    "text_es": "Enunciado de la pregunta español",
+    "text_en": "Enunciado de la pregunta ingés",
+    "text_fr": "Enunciado de la pregunta francés",
     "category": "user/report",
+    "tag": "all/01/02/03/04/05/06/07" // Representa a quién va dirigida la pregunta, mirar abajo
     "type": "textbox/number/likert/datetime/yesno/radio/multiselect/geolocation",
-    "possibleAnswers?": ["Array","Con","Las","respuestas","posibles"], //Sólo para radio o multiselect
+    "possibleAnswers_eu?": ["Array","Con","Las","respuestas","posibles"], // euskara
+    "possibleAnswers_es?": ["Array","Con","Las","respuestas","posibles"], // español
+    "possibleAnswers_en?": ["Array","Con","Las","respuestas","posibles"], // inglés
+    "possibleAnswers_fr?": ["Array","Con","Las","respuestas","posibles"], // francés
     "options": {
         "required": true,
         "subquestionOf?": "otherQuestionID",    // No puede ser subquestion y required
@@ -19,5 +26,12 @@
     "createdAt": "isodate"                     // Fecha de creación 
 }
 
-
-Falta language
+COLECTIVOS:
+01 - Minoría étnica/persona de origen extranjero.
+02 - Minoría religiosa.
+03 - Colectivo LGTBI.
+04 - Personas con diversidad funcional/discapacidad.
+05 - Mujeres ¿?
+06 - Minoría política/ideológica.
+07 - Persona pobre/en riesgo de exclusión
+08 - Otro

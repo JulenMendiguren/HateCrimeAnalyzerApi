@@ -1,7 +1,7 @@
 {
-    "_id": "asndjasdndgfdfg",
+    "_id": "0450601",
     "questionnaire": {
-        "_id": "asndjnasjd",
+        "_id": "2020-03-12T12:50:04.490+02:00",
         "questions": ["Array con todas las preguntas"],
         "createdAt": "isodate" // Fecha de creación
     },
