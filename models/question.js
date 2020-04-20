@@ -23,8 +23,7 @@ const questionSchema = new mongoose.Schema({
         required: true,
     },
     tag: {
-        type: String,
-        enum: ['all', '01', '02', '03', '04', '05', '06', '07', '08'],
+        type: mongoose.Schema.Types.Mixed,
         required: true,
     },
     type: {
@@ -38,6 +37,7 @@ const questionSchema = new mongoose.Schema({
             'radio',
             'multiselect',
             'geolocation',
+            'colective',
         ],
         required: true,
     },

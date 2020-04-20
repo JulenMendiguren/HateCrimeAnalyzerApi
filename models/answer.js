@@ -9,7 +9,7 @@ const answerSchema = new mongoose.Schema({
             _id: mongoose.Schema.Types.ObjectId,
 
             answer: {
-                type: mongoose.Schema.Types.Mixed
+                type: mongoose.Schema.Types.Mixed,
             },
             questionType: {
                 type: String,
@@ -21,11 +21,11 @@ const answerSchema = new mongoose.Schema({
                     'yesno',
                     'radio',
                     'multiselect',
-                    'geolocation'
+                    'geolocation',
                 ],
-                required: true
-            }
-        }
+                required: true,
+            },
+        },
     ],
     userQuestionnaire: questionnaire.schema, // Las preguntas del usuario
     userAnswers: [
@@ -33,7 +33,7 @@ const answerSchema = new mongoose.Schema({
             _id: mongoose.Schema.Types.ObjectId,
 
             answer: {
-                type: mongoose.Schema.Types.Mixed
+                type: mongoose.Schema.Types.Mixed,
             },
             questionType: {
                 type: String,
@@ -45,12 +45,16 @@ const answerSchema = new mongoose.Schema({
                     'yesno',
                     'radio',
                     'multiselect',
-                    'geolocation'
+                    'geolocation',
                 ],
-                required: true
-            }
-        }
-    ]
+                required: true,
+            },
+        },
+    ],
+    userTags: {
+        type: [mongoose.Schema.Types.Mixed],
+        required: true,
+    },
 });
 
 const Answer = mongoose.model('answers', answerSchema);
