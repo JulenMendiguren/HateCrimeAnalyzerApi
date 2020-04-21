@@ -22,6 +22,7 @@ const answerSchema = new mongoose.Schema({
                     'radio',
                     'multiselect',
                     'geolocation',
+                    'colective',
                 ],
                 required: true,
             },
@@ -46,12 +47,13 @@ const answerSchema = new mongoose.Schema({
                     'radio',
                     'multiselect',
                     'geolocation',
+                    'colective',
                 ],
                 required: true,
             },
         },
     ],
-    userTags: {
+    userCol: {
         type: [mongoose.Schema.Types.Mixed],
         required: true,
     },
