@@ -7,6 +7,7 @@ const question = require('./routes/question');
 const answer = require('./routes/answer');
 const questionnaire = require('./routes/questionnaire');
 const colective = require('./routes/colective');
+const user = require('./routes/user');
 
 app.use(express.json());
 app.use(morgan('tiny'));
@@ -30,6 +31,7 @@ app.use('/api/question/', question);
 app.use('/api/answer/', answer);
 app.use('/api/questionnaire/', questionnaire);
 app.use('/api/colective/', colective);
+app.use('/api/user/', user);
 
 app.listen(5005, () => console.log('Escuchando Puerto: ' + 5005));
 

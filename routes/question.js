@@ -1,4 +1,3 @@
-const mongosee = require('mongoose');
 const express = require('express');
 const Question = require('../models/question');
 const router = express.Router();
