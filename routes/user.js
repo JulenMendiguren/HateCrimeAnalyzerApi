@@ -25,7 +25,7 @@ router.post('/one', async (req, res) => {
 
 //getAll --> /all
 router.get('/all', async (req, res) => {
-    User.find((err, docs) => {
+    User.find({}, '_id name email role', (err, docs) => {
         if (err) {
             res.status(500).send(err.message);
         } else {
@@ -46,6 +46,39 @@ router.post('/auth', async (req, res) => {
 
     const jwt = user.generateJWT();
     res.status(200).send({ jwt });
+});
+
+//deleteByID --> /id/:id
+router.delete('/id/:id', async (req, res) => {
+    const id = req.params.id;
+
+    User.findByIdAndDelete(id, (err, docs) => {
+        if (err) {
+            return res.status(400).send(err.message);
+        }
+        if (!docs) {
+            return res.status(404).send('User not found');
+        }
+        res.status(200).send('The user has been deleted');
+    });
+});
+
+router.post('/update', async (req, res) => {
+    const user = await User.findById(req.body._id);
+
+    user.name = req.body.name;
+    user.email = req.body.email;
+    user.role = req.body.role;
+
+    const result = await user.save((err, docs) => {
+        if (err) {
+            return res.status(400).send(err.message);
+        }
+        if (!docs) {
+            return res.status(404).send('User not found');
+        }
+        res.status(200).send({ message: 'The user has been updated' });
+    });
 });
 
 module.exports = router;
