@@ -16,7 +16,7 @@ router.post('/one', async (req, res) => {
         name: req.body.name,
         email: req.body.email,
         role: req.body.role,
-        //password: hashedPw,
+        password: hashedPw,
     });
 
     const result = await user.save().catch((e) => res.status(400).send(e));
