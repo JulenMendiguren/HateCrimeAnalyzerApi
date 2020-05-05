@@ -6,7 +6,8 @@ const bcrypt = require('bcryptjs');
 // Registrar nuevo usuario
 router.post('/one', async (req, res) => {
     let user = await User.findOne({ email: req.body.email });
-    if (user) return res.status(400).send('That user already exists');
+    if (user)
+        return res.status(400).send({ message: 'That user already exists' });
 
     // Hasheando la password
     const salt = await bcrypt.genSalt(10);
@@ -20,7 +21,7 @@ router.post('/one', async (req, res) => {
     });
 
     const result = await user.save().catch((e) => res.status(400).send(e));
-    res.status(201).send('New user registered');
+    res.status(201).send({ message: 'New user registered' });
 });
 
 //getAll --> /all
@@ -37,12 +38,14 @@ router.get('/all', async (req, res) => {
 // Iniciar sesión --> /auth
 router.post('/auth', async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
-    if (!user) return res.status(400).send('Invalid email or password');
+    if (!user)
+        return res.status(400).send({ message: 'Invalid email or password' });
 
     // Compara la password con el hash de la DB
     const match = await bcrypt.compare(req.body.password, user.password);
 
-    if (!match) return res.status(400).send('Invalid email or password');
+    if (!match)
+        return res.status(400).send({ message: 'Invalid email or password' });
 
     const jwt = user.generateJWT();
     res.status(200).send({ jwt });
@@ -57,12 +60,13 @@ router.delete('/id/:id', async (req, res) => {
             return res.status(400).send(err.message);
         }
         if (!docs) {
-            return res.status(404).send('User not found');
+            return res.status(404).send({ message: 'User not found' });
         }
-        res.status(200).send('The user has been deleted');
+        res.status(200).send({ message: 'The user has been deleted' });
     });
 });
 
+// update --> /update
 router.post('/update', async (req, res) => {
     const user = await User.findById(req.body._id);
 
@@ -75,7 +79,7 @@ router.post('/update', async (req, res) => {
             return res.status(400).send(err.message);
         }
         if (!docs) {
-            return res.status(404).send('User not found');
+            return res.status(404).send({ message: 'User not found' });
         }
         res.status(200).send({ message: 'The user has been updated' });
     });

@@ -50,9 +50,29 @@ router.delete('/id/:id', async (req, res) => {
             return res.status(400).send(err.message);
         }
         if (!docs) {
-            return res.status(404).send('Colective not found');
+            return res.status(404).send({ message: 'Colective not found' });
         }
-        res.status(200).send('The colective has been deleted');
+        res.status(200).send({ message: 'The colective has been deleted' });
+    });
+});
+
+// update --> /update
+router.post('/update', async (req, res) => {
+    const colective = await Colective.findById(req.body._id);
+
+    colective.text_eu = req.body.text_eu;
+    colective.text_es = req.body.text_es;
+    colective.text_en = req.body.text_en;
+    colective.text_fr = req.body.text_fr;
+
+    const result = await colective.save((err, docs) => {
+        if (err) {
+            return res.status(400).send(err.message);
+        }
+        if (!docs) {
+            return res.status(404).send({ message: 'Colective not found' });
+        }
+        res.status(200).send({ message: 'The colective has been updated' });
     });
 });
 

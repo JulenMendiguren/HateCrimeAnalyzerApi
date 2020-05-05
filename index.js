@@ -1,8 +1,9 @@
 console.log('Hola mundo');
 const mongoose = require('mongoose');
 const express = require('express');
-const morgan = require('morgan');
 const app = express();
+const morgan = require('morgan');
+
 const question = require('./routes/question');
 const answer = require('./routes/answer');
 const questionnaire = require('./routes/questionnaire');
