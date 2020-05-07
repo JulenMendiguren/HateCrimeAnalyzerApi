@@ -121,7 +121,7 @@ router.get('/last/user', async (req, res) => {
                     .status(404)
                     .send('There is no user questionnaire in the DB');
             }
-            res.status(200).send(docs);
+            res.status(200).send(docs[0]);
         });
 });
 
@@ -139,7 +139,7 @@ router.get('/last/report', async (req, res) => {
                     .status(404)
                     .send('There is no report questionnaire in the DB');
             }
-            res.status(200).send(docs);
+            res.status(200).send(docs[0]);
         });
 });
 
