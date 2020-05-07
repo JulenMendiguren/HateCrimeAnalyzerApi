@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models/user');
 const bcrypt = require('bcryptjs');
+const auth = require('../middleware/auth');
+const authorizeRole = require('../middleware/roles');
 
 // Registrar nuevo usuario
 router.post('/one', async (req, res) => {
@@ -25,7 +27,7 @@ router.post('/one', async (req, res) => {
 });
 
 //getAll --> /all
-router.get('/all', async (req, res) => {
+router.get('/all', [auth, authorizeRole(['admin'])], async (req, res) => {
     User.find({}, '_id name email role', (err, docs) => {
         if (err) {
             res.status(500).send(err.message);
