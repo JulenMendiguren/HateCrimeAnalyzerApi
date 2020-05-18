@@ -17,11 +17,6 @@ const questionSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    category: {
-        type: String,
-        enum: ['user', 'report'],
-        required: true,
-    },
     tag: {
         type: mongoose.Schema.Types.Mixed,
         required: true,
