@@ -143,4 +143,6 @@ router.get('/last/report', async (req, res) => {
         });
 });
 
+router.post('/filter', async (req, res) => {});
+
 module.exports = router;

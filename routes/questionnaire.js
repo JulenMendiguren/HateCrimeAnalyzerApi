@@ -10,6 +10,7 @@ const router = express.Router();
 //getLastUser --> /last/user
 //getLastReport --> /last/report
 //deleteByID --> /id/:id
+//getVersionsReport --> /versions/report'
 
 //insertOne --> /one
 router.post('/one', async (req, res) => {
@@ -140,6 +141,25 @@ router.get('/last/report', async (req, res) => {
                     .send('There is no report questionnaire in the DB');
             }
             res.status(200).send(docs[0]);
+        });
+});
+
+//getVersionsReport
+router.get('/versions/report', async (req, res) => {
+    Questionnaire.find({ category: 'report' }, { createdAt: 1 })
+        .sort({
+            createdAt: -1,
+        })
+        .then((docs, failed) => {
+            if (failed) {
+                return res.status(500).send(failed);
+            }
+            if (Array.from(docs).length == 0) {
+                return res
+                    .status(404)
+                    .send('There is no report questionnaire in the DB');
+            }
+            res.status(200).send(docs);
         });
 });
 
