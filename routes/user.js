@@ -22,7 +22,7 @@ router.post('/one', async (req, res) => {
         password: hashedPw,
     });
 
-    const result = await user.save().catch((e) => res.status(400).send(e));
+    await user.save().catch((e) => res.status(400).send(e));
     res.status(201).send({ message: 'New user registered' });
 });
 
@@ -76,7 +76,7 @@ router.post('/update', async (req, res) => {
     user.email = req.body.email;
     user.role = req.body.role;
 
-    const result = await user.save((err, docs) => {
+    await user.save((err, docs) => {
         if (err) {
             return res.status(400).send(err.message);
         }

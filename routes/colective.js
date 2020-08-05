@@ -1,4 +1,3 @@
-const mongosee = require('mongoose');
 const express = require('express');
 const Colective = require('../models/Colective');
 const router = express.Router();
@@ -65,7 +64,7 @@ router.post('/update', async (req, res) => {
     colective.text_en = req.body.text_en;
     colective.text_fr = req.body.text_fr;
 
-    const result = await colective.save((err, docs) => {
+    await colective.save((err, docs) => {
         if (err) {
             return res.status(400).send(err.message);
         }

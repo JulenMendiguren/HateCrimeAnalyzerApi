@@ -78,7 +78,7 @@ router.post('/edit', async (req, res) => {
 
     question.overwrite(req.body.question);
 
-    const result = await question.save((err, docs) => {
+    await question.save((err, docs) => {
         if (err) {
             return res.status(400).send(err.message);
         }
