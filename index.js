@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 console.log('Hola mundo');
 const mongoose = require('mongoose');
 const express = require('express');
@@ -43,4 +44,4 @@ mongoose
         useUnifiedTopology: true,
     })
     .then(() => console.log('Conectado a MongoDb'))
-    .catch((erro) => console.log('No se ha conectado a MongoDb'));
+    .catch((erro) => console.log('No se ha conectado a MongoDb: ' + erro));
