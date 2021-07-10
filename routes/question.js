@@ -74,16 +74,20 @@ router.delete('/id/:id', async (req, res) => {
 
 // update --> /update
 router.post('/edit', async (req, res) => {
-    const question = await Question.findById(req.body._id);
 
-    question.overwrite(req.body.question);
+    const question = await Question.findById(req.body._id);
+    try {
+        question.overwrite(req.body.question);
+    } catch (error) {
+        return res.status(404).send({ message: 'Question not found' });
+    }
 
     await question.save((err, docs) => {
         if (err) {
             return res.status(400).send(err.message);
         }
         if (!docs) {
-            return res.status(404).send({ message: 'Question not found' });
+            return res.status(404).send({ message: 'Error saving question' });
         }
         res.status(200).send(docs);
     });

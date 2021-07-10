@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-console.log('Hola mundo');
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();

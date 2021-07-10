@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['colaborator', 'researcher', 'admin'],
     },
-    createdAt: { type: Date, default: Date.now }, // Fecha de creación
+    createdAt: { type: Date, default: Date.now }
 });
 
 // Genera una JWT con los datos del usuario
