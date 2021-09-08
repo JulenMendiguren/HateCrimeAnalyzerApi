@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['colaborator', 'researcher', 'admin'],
     },
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
 });
 
 // Genera una JWT con los datos del usuario
@@ -30,7 +30,7 @@ userSchema.methods.generateJWT = function () {
             email: this.email,
             role: this.role,
         },
-        'CRpr4mgr5BqpXV'
+        'RANDOM_SECRET_KEY'
     );
 };
 

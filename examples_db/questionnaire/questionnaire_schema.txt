@@ -1,8 +1,0 @@
- {
-        "_id": "asndjnasjd",
-        "category": "user/report",
-        "questions": ["Array con todas las preguntas"], // Véase q_schema.txt
-        "createdAt": "isodate" // Fecha de creación
- }
-
- lang?
