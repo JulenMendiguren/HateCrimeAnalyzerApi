@@ -1,6 +1,9 @@
 const express = require('express');
 const Questionnaire = require('../models/questionnaire');
 const router = express.Router();
+const Roles = require('../helpers/roles');
+const auth = require('../middleware/auth');
+const authorizeRole = require('../middleware/roles');
 
 //getQuestionnaireById --> /id/:id
 //insertOne --> /one
@@ -12,27 +15,35 @@ const router = express.Router();
 //getVersionsReport --> /versions/report'
 
 //insertOne --> /one
-router.post('/one', async (req, res) => {
-    var questionnaireJSON = req.body;
-    const questionnaire = new Questionnaire(questionnaireJSON);
-    try {
-        const result = await questionnaire.save();
-        res.status(201).send(result);
-    } catch (e) {
-        res.status(400).send(e.message);
+router.post(
+    '/one',
+    [auth, authorizeRole([Roles.Researcher, Roles.Admin])],
+    async (req, res) => {
+        var questionnaireJSON = req.body;
+        const questionnaire = new Questionnaire(questionnaireJSON);
+        try {
+            const result = await questionnaire.save();
+            res.status(201).send(result);
+        } catch (e) {
+            res.status(400).send(e.message);
+        }
     }
-});
+);
 
 //insertMany --> /many
-router.post('/many', async (req, res) => {
-    Questionnaire.insertMany(req.body, (err, docs) => {
-        if (err) {
-            res.status(400).send(err.message);
-        } else {
-            res.status(201).send(docs);
-        }
-    });
-});
+router.post(
+    '/many',
+    [auth, authorizeRole([Roles.Researcher, Roles.Admin])],
+    async (req, res) => {
+        Questionnaire.insertMany(req.body, (err, docs) => {
+            if (err) {
+                res.status(400).send(err.message);
+            } else {
+                res.status(201).send(docs);
+            }
+        });
+    }
+);
 
 //getAll --> /all
 router.get('/all', async (req, res) => {
@@ -93,19 +104,23 @@ router.get('/id/:id', async (req, res) => {
 });
 
 //deleteByID --> /id/:id
-router.delete('/id/:id', async (req, res) => {
-    const id = req.params.id;
+router.delete(
+    '/id/:id',
+    [auth, authorizeRole([Roles.Researcher, Roles.Admin])],
+    async (req, res) => {
+        const id = req.params.id;
 
-    Questionnaire.findByIdAndDelete(id, (err, docs) => {
-        if (err) {
-            return res.status(400).send(err.message);
-        }
-        if (!docs) {
-            return res.status(404).send('Questionnaire not found');
-        }
-        res.status(200).send('The questionnaire has been deleted');
-    });
-});
+        Questionnaire.findByIdAndDelete(id, (err, docs) => {
+            if (err) {
+                return res.status(400).send(err.message);
+            }
+            if (!docs) {
+                return res.status(404).send('Questionnaire not found');
+            }
+            res.status(200).send('The questionnaire has been deleted');
+        });
+    }
+);
 
 //getLastUser
 router.get('/last/user', async (req, res) => {
@@ -145,7 +160,7 @@ router.get('/last/report', async (req, res) => {
 
 //getVersionsReport
 router.get('/versions/report', async (req, res) => {
-    Questionnaire.find({ category: 'report' }, { createdAt: 1 })
+    Questionnaire.find({ category: 'report' }, { createdAt: 1, versionName: 1 })
         .sort({
             createdAt: -1,
         })

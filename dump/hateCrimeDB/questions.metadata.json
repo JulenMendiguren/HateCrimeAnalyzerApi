@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"hateCrimeDB.questions"}],"uuid":"ec2b29c772b24136a3f9709b29e4daee"}

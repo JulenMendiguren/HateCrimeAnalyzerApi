@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
+const Roles = require('../helpers/roles');
 const { User } = require('../models/user');
 const bcrypt = require('bcryptjs');
 const auth = require('../middleware/auth');
 const authorizeRole = require('../middleware/roles');
 
 // Registrar nuevo usuario
-router.post('/one', async (req, res) => {
+router.post('/one', [auth, authorizeRole([Roles.Admin])], async (req, res) => {
     let user = await User.findOne({ email: req.body.email });
     if (user)
         return res.status(400).send({ message: 'That user already exists' });
@@ -27,7 +28,7 @@ router.post('/one', async (req, res) => {
 });
 
 //getAll --> /all
-router.get('/all', [auth, authorizeRole(['admin'])], async (req, res) => {
+router.get('/all', [auth, authorizeRole([Roles.Admin])], async (req, res) => {
     User.find({}, '_id name email role', (err, docs) => {
         if (err) {
             res.status(500).send(err.message);
@@ -54,37 +55,45 @@ router.post('/auth', async (req, res) => {
 });
 
 //deleteByID --> /id/:id
-router.delete('/id/:id', async (req, res) => {
-    const id = req.params.id;
+router.delete(
+    '/id/:id',
+    [auth, authorizeRole([Roles.Admin])],
+    async (req, res) => {
+        const id = req.params.id;
 
-    User.findByIdAndDelete(id, (err, docs) => {
-        if (err) {
-            return res.status(400).send(err.message);
-        }
-        if (!docs) {
-            return res.status(404).send({ message: 'User not found' });
-        }
-        res.status(200).send({ message: 'The user has been deleted' });
-    });
-});
+        User.findByIdAndDelete(id, (err, docs) => {
+            if (err) {
+                return res.status(400).send(err.message);
+            }
+            if (!docs) {
+                return res.status(404).send({ message: 'User not found' });
+            }
+            res.status(200).send({ message: 'The user has been deleted' });
+        });
+    }
+);
 
 // update --> /update
-router.post('/update', async (req, res) => {
-    const user = await User.findById(req.body._id);
+router.post(
+    '/update',
+    [auth, authorizeRole([Roles.Admin])],
+    async (req, res) => {
+        const user = await User.findById(req.body._id);
 
-    user.name = req.body.name;
-    user.email = req.body.email;
-    user.role = req.body.role;
+        user.name = req.body.name;
+        user.email = req.body.email;
+        user.role = req.body.role;
 
-    await user.save((err, docs) => {
-        if (err) {
-            return res.status(400).send(err.message);
-        }
-        if (!docs) {
-            return res.status(404).send({ message: 'User not found' });
-        }
-        res.status(200).send({ message: 'The user has been updated' });
-    });
-});
+        await user.save((err, docs) => {
+            if (err) {
+                return res.status(400).send(err.message);
+            }
+            if (!docs) {
+                return res.status(404).send({ message: 'User not found' });
+            }
+            res.status(200).send({ message: 'The user has been updated' });
+        });
+    }
+);
 
 module.exports = router;

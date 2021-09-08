@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const history = require('connect-history-api-fallback');
 
+//Routes
 const question = require('./routes/question');
 const answer = require('./routes/answer');
 const questionnaire = require('./routes/questionnaire');
@@ -12,8 +14,9 @@ const user = require('./routes/user');
 
 app.use(express.json());
 app.use(morgan('tiny'));
+app.use(history());
 
-// https://victorroblesweb.es/2018/01/31/configurar-acceso-cors-en-nodejs/
+// CORS
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header(
@@ -27,6 +30,8 @@ app.use((req, res, next) => {
     res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
     next();
 });
+
+app.use(express.static('hatecrimeweb_public'));
 
 app.use('/api/question/', question);
 app.use('/api/answer/', answer);

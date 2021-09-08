@@ -2,6 +2,9 @@ const express = require('express');
 const Answer = require('../models/Answer');
 const router = express.Router();
 const ObjectId = require('mongoose').Types.ObjectId;
+const Roles = require('../helpers/roles');
+const auth = require('../middleware/auth');
+const authorizeRole = require('../middleware/roles');
 
 //getAnswerById --> /id/:id
 //insertOne --> /one
@@ -33,70 +36,105 @@ router.post('/many', async (req, res) => {
 });
 
 //getAll --> /all
-router.get('/all', async (req, res) => {
-    Answer.find((err, docs) => {
-        if (err) {
-            res.status(500).send(err.message);
-        } else {
-            res.status(200).send(docs);
-        }
-    });
-});
+router.get(
+    '/all',
+    [auth, authorizeRole([Roles.Colab, Roles.Researcher, Roles.Admin])],
+    async (req, res) => {
+        Answer.find((err, docs) => {
+            if (err) {
+                res.status(500).send(err.message);
+            } else {
+                res.status(200).send(docs);
+            }
+        });
+    }
+);
 
 //getAnswerById --> /id/:id
-router.get('/id/:id', async (req, res) => {
-    const id = req.params.id;
-    Answer.findById(id, (err, docs) => {
-        if (err) {
-            res.status(400).send(err.message);
-        } else {
+router.get(
+    '/id/:id',
+    [auth, authorizeRole([Roles.Colab, Roles.Researcher, Roles.Admin])],
+    async (req, res) => {
+        const id = req.params.id;
+        Answer.findById(id, (err, docs) => {
+            if (err) {
+                res.status(400).send(err.message);
+            } else {
+                if (!docs) {
+                    return res.status(404).send('Answer not found');
+                }
+                res.status(200).send(docs);
+            }
+        });
+    }
+);
+
+//deleteByID --> /id/:id
+router.delete(
+    '/id/:id',
+    [auth, authorizeRole([Roles.Researcher, Roles.Admin])],
+    async (req, res) => {
+        const id = req.params.id;
+
+        Answer.findByIdAndDelete(id, (err, docs) => {
+            if (err) {
+                return res.status(400).send(err.message);
+            }
             if (!docs) {
                 return res.status(404).send('Answer not found');
             }
-            res.status(200).send(docs);
-        }
-    });
-});
-
-//deleteByID --> /id/:id
-router.delete('/id/:id', async (req, res) => {
-    const id = req.params.id;
-
-    Answer.findByIdAndDelete(id, (err, docs) => {
-        if (err) {
-            return res.status(400).send(err.message);
-        }
-        if (!docs) {
-            return res.status(404).send('Answer not found');
-        }
-        res.status(200).send('The answer has been deleted');
-    });
-});
+            res.status(200).send('The answer has been deleted');
+        });
+    }
+);
 
 //getLastReport
-router.get('/last/report', async (req, res) => {
-    Answer.find({ category: 'report' })
-        .sort({ createdAt: -1 })
-        .limit(1)
-        .then((docs, failed) => {
-            if (failed) {
-                return res.status(500).send(failed);
-            }
-            if (Array.from(docs).length == 0) {
-                return res
-                    .status(404)
-                    .send('There is no report answer in the DB');
-            }
-            res.status(200).send(docs);
-        });
-});
+router.get(
+    '/last/report',
+    [auth, authorizeRole([Roles.Colab, Roles.Researcher, Roles.Admin])],
+    async (req, res) => {
+        Answer.find({ category: 'report' })
+            .sort({ createdAt: -1 })
+            .limit(1)
+            .then((docs, failed) => {
+                if (failed) {
+                    return res.status(500).send(failed);
+                }
+                if (Array.from(docs).length == 0) {
+                    return res
+                        .status(404)
+                        .send('There is no report answer in the DB');
+                }
+                res.status(200).send(docs);
+            });
+    }
+);
 
-router.post('/filter', async (req, res) => {
-    const filterJSON = req.body;
+router.post(
+    '/filter',
+    [auth, authorizeRole([Roles.Colab, Roles.Researcher, Roles.Admin])],
+    async (req, res) => {
+        const filterJSON = req.body;
+        let filteredResult;
+
+        try {
+            filteredResult = await filter(filterJSON);
+        } catch (e) {
+            return res.status(500).send(e);
+        }
+        return res.status(200).send(filteredResult);
+    }
+);
+
+async function filter(filterJSON) {
     let mongoFilter = {};
-
+    let docs;
     if (filterJSON.version != 'all' && filterJSON.version) {
         mongoFilter['questionnaire._id'] = new ObjectId(filterJSON.version);
+    }
+
+    if (filterJSON.userCol) {
+        mongoFilter['userCol'] = filterJSON.userCol;
     }
 
     if (filterJSON.startDate || filterJSON.endDate) {
@@ -108,28 +146,37 @@ router.post('/filter', async (req, res) => {
             mongoFilter['createdAt']['$lt'] = new Date(filterJSON.endDate);
         }
     }
+    try {
+        docs = await applyGeneralFilter(mongoFilter);
+    } catch (e) {
+        console.log(e);
+        throw new Error(e.message);
+    }
+    // If filtering by place is enabled
+    if (filterJSON.place.enabled && filterJSON.place.radius) {
+        docs = filterByLocation(
+            filterJSON.place.location,
+            filterJSON.place.radius,
+            docs
+        );
+    }
+    return docs;
+}
 
-    Answer.find(mongoFilter).then((docs, failed) => {
-        if (failed) {
-            return res.status(500).send(failed);
-        }
-        if (docs) {
-            // If filtering by place is enabled
-            if (filterJSON.place.enabled && filterJSON.place.radius) {
-                filterByLocation(
-                    filterJSON.place.location,
-                    filterJSON.place.radius,
-                    docs,
-                    res
-                );
+async function applyGeneralFilter(mongoFilter) {
+    return Answer.find(mongoFilter)
+        .select('-__v')
+        .then((docs, failed) => {
+            if (failed) {
+                let e = new Error('ERROR applying filter to incidents DB');
+                throw e;
             } else {
-                return res.status(200).send(docs);
+                return docs;
             }
-        }
-    });
-});
+        });
+}
 
-function filterByLocation(origin, radius, docs, res) {
+function filterByLocation(origin, radius, docs) {
     const validDocs = [];
 
     docs.forEach((ans) => {
@@ -145,7 +192,7 @@ function filterByLocation(origin, radius, docs, res) {
         }
     });
 
-    return res.status(200).send(validDocs);
+    return validDocs;
 }
 // Harvesine formula to calculate distance between 2 coordinates on the Earth
 function distTwoCoords(lat1, lon1, lat2, lon2) {
